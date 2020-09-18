@@ -1,12 +1,12 @@
-package com.vladf.labs.lab2;
+package com.vladf.labs.lab2.figures;
 
 
-import java.util.ArrayList;
+import lombok.*;
 
 public class Trapeze extends Quadrangle{
-    private double CentLine;
+    private @Getter double CentLine;
 
-    public Trapeze(ArrayList<Double> point1, ArrayList<Double> point2, ArrayList<Double> point3, ArrayList<Double> point4)
+    public Trapeze(double[] point1, double[] point2, double[] point3, double[] point4)
     {
         super(point1, point2, point3, point4);
         this.CalcCentLine();
@@ -29,4 +29,6 @@ public class Trapeze extends Quadrangle{
                 +"\n\tArea:\t"+this.getArea()
                 +"\n\tCentraLine:\t"+this.CentLine;
     }
+
+
 }

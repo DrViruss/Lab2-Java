@@ -1,15 +1,29 @@
-package com.vladf.labs.lab2;
+package com.vladf.labs.lab2.utils;
+
+import com.vladf.labs.lab2.ifaces.IQuad;
+import com.vladf.labs.lab2.figures.Quadrangle;
+import com.vladf.labs.lab2.figures.Trapeze;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Inputer {
+
+
+    /**
+     * Just text. Nothing interesting
+     */
     private static void PrintMenu() {
         System.out.println("1.Add new Figure\n2.Show All\n3.Remove\n4.Exit");
     }
 
-    private static void remove(ArrayList<Quad> arr) throws IOException {
+    /**
+     * Removing object from array
+     * @param Figure array
+     * @throws IOException.Nevermind
+     */
+    private static void remove(ArrayList<IQuad> arr) throws IOException {
         do {
             Scanner ssc = new Scanner(System.in);
             if(ssc.hasNextInt()) {
@@ -41,12 +55,22 @@ public class Inputer {
         }while (true);
     }
 
+    /**
+     * Lets cler screen!
+     * (Works only in terminal and command prompt)
+     * @throws IOException.Nevermind!
+     */
     private static void ClearScreen() throws IOException { //Dont work on IDA
         System.out.println("\033[H\033[2J");
         System.out.flush();
         System.out.println("/-----------------------------------------/");
     }
 
+    /**
+     * Lets make way without exeptions
+     * @param Array index
+     * @return digit
+     */
     private static double MayError(int i)
     {
         while (true) {
@@ -61,49 +85,71 @@ public class Inputer {
                 System.out.println("ERROR");
         }
     }
-    private static void PointInit()
+
+    private static void Input()
     {
-        //Out of order :D
-//        ArrayList<ArrayList<Double>> _tmp = new ArrayList<>();
-//        for (int i=0;i<_tmp.size();i++)
-//            for (int j=0;j<2;j++)
-//                _tmp.get(i).add((double)0);
-
-
-        //seems strange, but works :D
-        Quad.A.add((double)0);
-        Quad.A.add((double)0);
-        //
-        Quad.B.add((double)0);
-        Quad.B.add((double)0);
-        //
-        Quad.C.add((double)0);
-        Quad.C.add((double)0);
-        //
-        Quad.D.add((double)0);
-        Quad.D.add((double)0);
-
-    }
-
-    private static void Input() {
-            PointInit();
 
             System.out.println("A:");
             for(int i=0; i<2;i++)
-                Quad.A.set(i,MayError(i));
+                IQuad.A[i] = MayError(i);
             System.out.println("B:");
             for(int i=0; i<2;i++)
-                Quad.B.set(i,MayError(i));
+                IQuad.B[i] = MayError(i);
             System.out.println("C:");
             for(int i=0; i<2;i++)
-                Quad.C.set(i,MayError(i));
+                IQuad.C[i] = MayError(i);
             System.out.println("D:");
             for(int i=0; i<2;i++)
-                Quad.D.set(i,MayError(i));
+                IQuad.D[i] = MayError(i);
+    }
+
+    /**
+     * Getting results
+     * @param Figures array
+     * @return result :D
+     */
+    private String FinalResult(ArrayList<IQuad> arr)
+{
+    String result="";
+    //Quadrangle result
+    byte _tmp =(byte)IQuad.QWBA(arr);
+    if(_tmp!=-1)
+        result+="\nQuadrangle with smallest area\t-\t #" + (_tmp+1);
+    else
+        result+="\nThere are no quadrangles in list. So I cant find smallest area";
+    //Trapeze result
+    _tmp =(byte)IQuad.TWBCL(arr);
+    if(_tmp!=-1)
+        result+="\nTrapeze with biggest centralline\t-\t #" + (_tmp+1);
+    else
+        result+="\nThere are no trapezes in list. So I cant find biggest CL";
+
+
+    return result;
+}
+
+    private boolean WWO(ArrayList<IQuad> arr)
+    {
+        if(!IQuad.isDot()) {
+            IQuad Q;
+            if (IQuad.isTrapeze(IQuad.A, IQuad.B, IQuad.C, IQuad.D))
+                Q = new Trapeze(IQuad.A, IQuad.B, IQuad.C, IQuad.D);
+            else
+                Q = new Quadrangle(IQuad.A, IQuad.B, IQuad.C, IQuad.D);
+            arr.add(Q);
+            return true;
+        }
+        return false;
     }
 
 
-public void Menu(ArrayList<Quad> arr) throws IOException {
+    /**
+     * Main menu
+     * @param Figures array
+     * @throws IOException.Newermind!
+     */
+    public void Menu(ArrayList<IQuad> arr) throws IOException
+    {
     PrintMenu();
     do {
         Scanner sc = new Scanner(System.in);
@@ -111,19 +157,22 @@ public void Menu(ArrayList<Quad> arr) throws IOException {
             ClearScreen();
             switch (sc.nextInt()) {
                 case (1):
-                    Input();
-                    Quad Q ;
-                    if (Quad.isTrapeze(Quad.A,Quad.B,Quad.C,Quad.D))
-                        Q = new Trapeze(Quad.A,Quad.B,Quad.C,Quad.D);
-                    else
-                        Q = new Quadrangle(Quad.A,Quad.B,Quad.C,Quad.D);
-                    arr.add(Q);
-                    ClearScreen();
+                    boolean _tmp = false;
+                    do {
+                        Input();
+                        _tmp = !WWO(arr);
+                        ClearScreen();
+                        if(_tmp)
+                            System.out.println("Nice try \uD83D\uDE09 \nLets try again!");
+                    }while (_tmp);
                     PrintMenu();
                     break;
                 case (2):
                     for (int i = 0; i < arr.size(); i++)
                         System.out.println(i + 1 + ". " + arr.get(i).toString());
+                    System.out.println("\n~~~~~~~~~~~~~~~~~~~Main Result~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+                            +FinalResult(arr));
+
                     System.out.println("");
                     PrintMenu();
                     break;

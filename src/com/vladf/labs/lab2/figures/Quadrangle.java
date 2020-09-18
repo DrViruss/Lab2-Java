@@ -1,9 +1,9 @@
-package com.vladf.labs.lab2;
+package com.vladf.labs.lab2.figures;
 
+import com.vladf.labs.lab2.ifaces.IQuad;
 import lombok.*;
-import java.util.ArrayList;
 
-public @ToString class  Quadrangle  implements Quad{
+public @ToString class  Quadrangle  implements IQuad {
     private@Getter double Line_a;
     private@Getter double Line_b;
     private@Getter double Line_c;
@@ -13,19 +13,26 @@ public @ToString class  Quadrangle  implements Quad{
     private @Getter double Area;
 
 
-    public Quadrangle(ArrayList<Double> point1, ArrayList<Double>point2,ArrayList<Double> point3,ArrayList<Double>point4)
+    public Quadrangle(double[] point1, double[]point2,double[] point3,double[]point4)
     {
         this.setLines(point1,point2,point3,point4);
         this.CalcData(this.Line_a,this.Line_b,this.Line_c,this.Line_d);
     }
 
+    /**
+     * Calculatig perimeter and area
+     * @param Line_a
+     * @param Line_b
+     * @param Line_c
+     * @param Line_d
+     */
     private void CalcData(double Line_a, double Line_b, double Line_c, double Line_d)
     {
         this.Perimeter = getPerimetre( Line_a, Line_b, Line_c, Line_d);
         this.Area = getArea( Line_a, Line_b, Line_c, Line_d);
     }
 
-    private void setLines(ArrayList<Double> point1, ArrayList<Double>point2,ArrayList<Double> point3,ArrayList<Double>point4)
+    private void setLines(double[] point1, double[]point2,double[] point3,double[]point4)
     {
         this.Line_a = getSize(point1,point2);
         this.Line_b = getSize(point2,point3);
