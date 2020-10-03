@@ -22,7 +22,7 @@ public class Inputer {
     /**
      * Removing object from array
      * @param Figure array
-     * @throws IOException.Nevermind
+     * @throws IOException
      */
     private static void remove(ArrayList<IQuad> arr) throws IOException
     {
@@ -60,7 +60,7 @@ public class Inputer {
     /**
      * Lets cler screen!
      * (Works only in terminal and command prompt)
-     * @throws IOException.Nevermind!
+     * @throws IOException
      */
     private static void ClearScreen() throws IOException
     { //Dont work on IDA
@@ -198,7 +198,7 @@ public class Inputer {
     /**
      * Main menu
      * @param Figures array
-     * @throws IOException.Newermind!
+     * @throws IOException
      */
     public void Menu(ArrayList<IQuad> arr) throws IOException
     {

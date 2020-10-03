@@ -76,7 +76,7 @@ public class FileWorker {
             file.setWritable(true);
             fw =  new FileWriter(file);
             fw.write(_tmp);
-            //FINALE
+            //FINALEs
             fw.close();
         }
         catch (Exception e)
