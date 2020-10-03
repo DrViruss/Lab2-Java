@@ -12,18 +12,18 @@ public double[] B = new double[2];
 public double[] C = new double[2];
 public double[] D = new double[2];
 
-public default double getSize(double[] point1,double[]point2)
-{
+    public default double getSize(double[] point1,double[]point2)
+    {
     return Math.sqrt(Math.pow(point2[0]-point1[0],2)+Math.pow(point2[1]-point1[1],2));
 }
 
-public default double getPerimetre(double Line_a,double Line_b,double Line_c,double Line_d)
-{
+    public default double getPerimetre(double Line_a,double Line_b,double Line_c,double Line_d)
+    {
     return Line_a+Line_b+Line_c+ Line_d;
 }
 
-public default double getArea(double Line_a,double Line_b,double Line_c,double Line_d)
-{
+    public default double getArea(double Line_a,double Line_b,double Line_c,double Line_d)
+    {
     return Line_a*Line_b*Line_c* Line_d;
 }
 
@@ -36,7 +36,7 @@ public default double getArea(double Line_a,double Line_b,double Line_c,double L
      * @return any guesses? -_-
      */
     public static boolean isTrapeze(double[] point1, double[] point2, double[] point3, double[] point4)
-{
+    {
 boolean _tmp1=false;
 boolean _tmp2 =false;
     if(((point2[1]-point1[1])/(point2[0]-point1[0])==((point3[1]-point4[1])/(point3[0]-point4[0]))))
@@ -104,10 +104,21 @@ boolean _tmp2 =false;
 
         return _tmp;
     }
+
+    /**
+     * Is it dot?! Lets check it ;)
+     * @return
+     */
     public static boolean isDot()
     {
-        if(Arrays.equals(A , B) ||Arrays.equals(A , C)||Arrays.equals(A , D) || Arrays.equals(C , B)||Arrays.equals(D , B)||Arrays.equals(D , C ))
-            return true;
-        return false;
+        return Arrays.equals(A , B) ||Arrays.equals(A , C)||Arrays.equals(A , D) || Arrays.equals(C , B)||Arrays.equals(D , B)||Arrays.equals(D , C );
+    }
+
+    /**
+     * Export
+     * @return string: type,lineA,lineB,lineC,lineD
+     */
+    public default String Export() {
+        return null;
     }
 }

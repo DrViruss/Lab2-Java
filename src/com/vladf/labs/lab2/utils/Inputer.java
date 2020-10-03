@@ -4,6 +4,7 @@ import com.vladf.labs.lab2.ifaces.IQuad;
 import com.vladf.labs.lab2.figures.Quadrangle;
 import com.vladf.labs.lab2.figures.Trapeze;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -15,7 +16,7 @@ public class Inputer {
      * Just text. Nothing interesting
      */
     private static void PrintMenu() {
-        System.out.println("1.Add new Figure\n2.Show All\n3.Remove\n4.Exit");
+        System.out.println("1.Add new Figure\n2.Show All\n3.Remove\n4.Export\n5.Import\n6.Exit");
     }
 
     /**
@@ -23,7 +24,8 @@ public class Inputer {
      * @param Figure array
      * @throws IOException.Nevermind
      */
-    private static void remove(ArrayList<IQuad> arr) throws IOException {
+    private static void remove(ArrayList<IQuad> arr) throws IOException
+    {
         do {
             Scanner ssc = new Scanner(System.in);
             if(ssc.hasNextInt()) {
@@ -60,7 +62,8 @@ public class Inputer {
      * (Works only in terminal and command prompt)
      * @throws IOException.Nevermind!
      */
-    private static void ClearScreen() throws IOException { //Dont work on IDA
+    private static void ClearScreen() throws IOException
+    { //Dont work on IDA
         System.out.println("\033[H\033[2J");
         System.out.flush();
         System.out.println("/-----------------------------------------/");
@@ -86,6 +89,9 @@ public class Inputer {
         }
     }
 
+    /**
+     * Input coords
+     */
     private static void Input()
     {
 
@@ -109,7 +115,7 @@ public class Inputer {
      * @return result :D
      */
     private String FinalResult(ArrayList<IQuad> arr)
-{
+    {
     String result="";
     //Quadrangle result
     byte _tmp =(byte)IQuad.QWBA(arr);
@@ -128,7 +134,12 @@ public class Inputer {
     return result;
 }
 
-    private boolean WWO(ArrayList<IQuad> arr)
+    /**
+     * Define object and add it to ArrayList
+     * @param arr
+     * @return
+     */
+    public boolean WWO(ArrayList<IQuad> arr)
     {
         if(!IQuad.isDot()) {
             IQuad Q;
@@ -140,6 +151,47 @@ public class Inputer {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Try to write data to file.
+     * @param arr
+     * @param sc
+     * @throws IOException
+     */
+    private void WritingToFile(ArrayList<IQuad>arr, Scanner sc) throws IOException
+    {
+
+        FileWorker fw = new FileWorker();
+        if(fw.Write(arr))
+            System.out.println("All data has been saved succesfully!");
+        else {
+            System.out.println("Seems like saving has been failed.\nIf you want to reset file press 'Y' else press 'N'");
+            String __tmp =" ";
+            while(true) {
+                __tmp = sc.next();
+                if (__tmp.charAt(0) =='Y' || __tmp.charAt(0)=='y') {
+                    if (fw.RecreateFile())
+                    {
+                        if(fw.Write(arr))
+                            System.out.println("All data has been saved succesfully!");
+                        else
+                            System.out.println("We cant fix this error. Please create issue on GitHub.");
+                    }
+                    else
+                        System.out.println("Permission ERROR. You must to fix it manually \\uD83D\\uDE1B");
+                    break;
+                }
+                else if (__tmp.charAt(0) =='N' || __tmp.charAt(0)=='n')
+                {
+                    //DO SOMETHING
+                    PrintMenu();
+                    break;
+                }
+                else
+                    continue;
+            }
+        }
     }
 
 
@@ -168,11 +220,15 @@ public class Inputer {
                     PrintMenu();
                     break;
                 case (2):
-                    for (int i = 0; i < arr.size(); i++)
-                        System.out.println(i + 1 + ". " + arr.get(i).toString());
-                    System.out.println("\n~~~~~~~~~~~~~~~~~~~Main Result~~~~~~~~~~~~~~~~~~~~~~~~~\n"
-                            +FinalResult(arr));
-
+                    if(arr.size()!=0)
+                    {
+                        for (int i = 0; i < arr.size(); i++)
+                            System.out.println(i + 1 + ". " + arr.get(i).toString());
+                        System.out.println("\n~~~~~~~~~~~~~~~~~~~Main Result~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+                                +FinalResult(arr));
+                    }
+                    else
+                        System.out.println("List is empty");
                     System.out.println("");
                     PrintMenu();
                     break;
@@ -182,8 +238,24 @@ public class Inputer {
                     PrintMenu();
                     break;
                 case (4):
+                    WritingToFile(arr,sc);
+                    ClearScreen();
+                    PrintMenu();
+                    break;
+                case (5):
+                        FileWorker fw = new FileWorker();
+                        arr = fw.Read();
+                        if(arr == null)
+                            arr=new ArrayList<>();
+                        ClearScreen();
+                    PrintMenu();
+                    break;
+
+                case (6):
                     System.out.println("BYE");
                     System.exit(0);
+                    break;
+
                 default:
                     System.out.println("IDK this command");
             }
@@ -191,5 +263,4 @@ public class Inputer {
             System.out.println("Unknown command");
     } while (true);
 }
-
 }
