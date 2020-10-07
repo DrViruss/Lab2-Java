@@ -161,37 +161,85 @@ public class Inputer {
      */
     private void WritingToFile(ArrayList<IQuad>arr, Scanner sc) throws IOException
     {
-
         FileWorker fw = new FileWorker();
-        if(fw.Write(arr))
-            System.out.println("All data has been saved succesfully!");
-        else {
-            System.out.println("Seems like saving has been failed.\nIf you want to reset file press 'Y' else press 'N'");
-            String __tmp =" ";
-            while(true) {
-                __tmp = sc.next();
-                if (__tmp.charAt(0) =='Y' || __tmp.charAt(0)=='y') {
-                    if (fw.RecreateFile())
-                    {
-                        if(fw.Write(arr))
-                            System.out.println("All data has been saved succesfully!");
+        System.out.println("Do you want to use serialization?([Y]es/[N]o/[A]bort)");
+        while (true)
+        {
+            String _choise = sc.next();
+            if(_choise.charAt(0)=='Y'||_choise.charAt(0)=='y')
+            {
+                if(fw.SerializeWrite(arr))
+                    System.out.println("All data has been saved succesfully!");
+                else {
+                    System.out.println("Seems like saving has been failed.\nIf you want to reset file press 'Y' else press 'N'");
+                    String __tmp =" ";
+                    while(true) {
+                        __tmp = sc.next();
+                        if (__tmp.charAt(0) =='Y' || __tmp.charAt(0)=='y') {
+                            if (fw.RecreateFile())
+                            {
+                                if(fw.SerializeWrite(arr))
+                                    System.out.println("All data has been saved succesfully!");
+                                else
+                                    System.out.println("We cant fix this error. Please create issue on GitHub.");
+                            }
+                            else
+                                System.out.println("Permission ERROR. You must to fix it manually \\uD83D\\uDE1B");
+                            break;
+                        }
+                        else if (__tmp.charAt(0) =='N' || __tmp.charAt(0)=='n')
+                        {
+                            //DO SOMETHING
+                            PrintMenu();
+                            break;
+                        }
                         else
-                            System.out.println("We cant fix this error. Please create issue on GitHub.");
+                            continue;
                     }
-                    else
-                        System.out.println("Permission ERROR. You must to fix it manually \\uD83D\\uDE1B");
-                    break;
                 }
-                else if (__tmp.charAt(0) =='N' || __tmp.charAt(0)=='n')
-                {
-                    //DO SOMETHING
-                    PrintMenu();
-                    break;
-                }
-                else
-                    continue;
+                break;
             }
+            else if(_choise.charAt(0)=='N'||_choise.charAt(0)=='n')
+            {
+                if(fw.Write(arr))
+                    System.out.println("All data has been saved succesfully!");
+                else {
+                    System.out.println("Seems like saving has been failed.\nIf you want to reset file press 'Y' else press 'N'");
+                    String __tmp =" ";
+                    while(true) {
+                        __tmp = sc.next();
+                        if (__tmp.charAt(0) =='Y' || __tmp.charAt(0)=='y') {
+                            if (fw.RecreateFile())
+                            {
+                                if(fw.Write(arr))
+                                    System.out.println("All data has been saved succesfully!");
+                                else
+                                    System.out.println("We cant fix this error. Please create issue on GitHub.");
+                            }
+                            else
+                                System.out.println("Permission ERROR. You must to fix it manually \\uD83D\\uDE1B");
+                            break;
+                        }
+                        else if (__tmp.charAt(0) =='N' || __tmp.charAt(0)=='n')
+                        {
+                            //DO SOMETHING
+                            PrintMenu();
+                            break;
+                        }
+                        else
+                            continue;
+                    }
+                }
+                break;
+            }
+            else if(_choise.charAt(0)=='A'||_choise.charAt(0)=='a')
+            {
+                System.out.println("Aborting..");
+                break;
+            }
+
         }
+
     }
 
 
@@ -243,11 +291,8 @@ public class Inputer {
                     PrintMenu();
                     break;
                 case (5):
-                        FileWorker fw = new FileWorker();
-                        arr = fw.Read();
-                        if(arr == null)
-                            arr=new ArrayList<>();
-                        ClearScreen();
+                    arr = ReadFromFile(arr,sc);
+                    ClearScreen();
                     PrintMenu();
                     break;
 
@@ -263,4 +308,51 @@ public class Inputer {
             System.out.println("Unknown command");
     } while (true);
 }
+
+    private ArrayList<IQuad> ReadFromFile(ArrayList<IQuad> arr, Scanner sc) throws IOException,NullPointerException {
+        FileWorker fw = new FileWorker();
+        System.out.println("Do you want to use serialization?([Y]es/[N]o/[A]bort)");
+        while (true)
+        {
+            String _choise = sc.next();
+            if(_choise.charAt(0)=='Y'||_choise.charAt(0)=='y')
+            {
+                arr = fw.SerializeRead();
+                for (int i = 0; i < arr.size(); i++) {
+                    String s= null;
+                    try {
+                        s=arr.get(i).toString();
+
+                        if(s.contains("\n\tLine A:\t0.0"))
+                        {
+                            arr.remove(i);
+                            i-=1;
+                            continue;
+                        }
+                    }
+                    catch (Exception e)
+                    {}
+                }
+                for (int i = arr.size()-1; i >-1; i--)
+                    if (arr.get(i)==null)
+                        arr.remove(i);
+
+                return arr;
+            }
+            else if(_choise.charAt(0)=='N'||_choise.charAt(0)=='n')
+            {
+                arr = fw.Read();
+                if(arr == null)
+                    arr=new ArrayList<>();
+                return arr;
+            }
+            else if(_choise.charAt(0)=='A'||_choise.charAt(0)=='a')
+            {
+                System.out.println("Aborting..");
+                arr=new ArrayList<>();
+                return arr;
+            }
+
+        }
+    }
 }

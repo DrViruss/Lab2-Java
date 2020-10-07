@@ -6,6 +6,20 @@ import lombok.*;
 public class Trapeze extends Quadrangle{
     private @Getter double CentLine;
 
+    public Trapeze(double line_a, double line_b, double line_c, double line_d, double perimeter, double area, double centLine) {
+        super(line_a, line_b, line_c, line_d, perimeter, area);
+        if(line_a==0||line_b==0||line_c==0||line_d==0)
+        {
+            System.out.println("Currupted data. Skip..");
+        }
+        else {
+            if (centLine != 0)
+                CentLine = centLine;
+            else
+                this.CalcCentLine();
+        }
+    }
+
     /**
      * Constructig Trapeze object by coords
      * @param point1

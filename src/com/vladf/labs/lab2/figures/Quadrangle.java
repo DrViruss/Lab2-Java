@@ -12,6 +12,24 @@ public @ToString class  Quadrangle  implements IQuad {
     private@Getter double Perimeter;
     private @Getter double Area;
 
+    public Quadrangle(double line_a, double line_b, double line_c, double line_d, double perimeter, double area) {
+        if(line_a==0||line_b==0||line_c==0||line_d==0)
+        {
+            System.out.println("Currupted data. Skip..");
+        }
+        else {
+            Line_a = line_a;
+            Line_b = line_b;
+            Line_c = line_c;
+            Line_d = line_d;
+            if (perimeter != 0 || area != 0) {
+                Perimeter = perimeter;
+                Area = area;
+            } else
+                this.CalcData(this.Line_a, this.Line_b, this.Line_c, this.Line_d);
+        }
+    }
+
     /**
      * Constructig Quadrangle object by coords
      * @param point1

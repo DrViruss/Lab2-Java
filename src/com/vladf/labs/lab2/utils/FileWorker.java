@@ -7,6 +7,7 @@ import com.vladf.labs.lab2.ifaces.IQuad;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+import com.alibaba.fastjson.JSON;
 
 public class FileWorker {
     private final File file = new File("DATA.lab2");
@@ -108,6 +109,57 @@ public class FileWorker {
         else {
             file.delete();
             return true;
+        }
+    }
+
+    /*~~~~~~~~~~~~Seriallization~~~~~~~~~~~~~~~*/
+
+    public boolean SerializeWrite(ArrayList<IQuad> List) throws IOException {
+        HowIsThere();
+        FileWriter fw ;
+        String _tmp=" ";
+        for (int i=0;i<List.size();i++)
+            _tmp += JSON.toJSONString(List.get(i))+"\n";
+        try{
+            file.setWritable(true);
+            fw =  new FileWriter(file);
+            fw.write(_tmp);
+            //FINALEs
+            fw.close();
+        }
+        catch (Exception e)
+        {
+            System.out.println("ERROR: "+e.getMessage()+".\n"+"Aborting...");
+            return false;
+        }
+        file.setReadOnly();
+        return true;
+    }
+
+    public ArrayList<IQuad> SerializeRead() throws IOException {
+        ArrayList<IQuad> result = new ArrayList<>();
+        if (!file.exists())
+            return null;
+        else {
+            FileReader fr = new FileReader(file);
+            Scanner scanner = new Scanner(fr);
+            IQuad q =null;
+            int line = 0;
+            while (scanner.hasNextLine()) {
+                line += 1;
+                String _tmp = scanner.nextLine();
+                if (_tmp.contains("centLine")) {try{ q = JSON.parseObject(_tmp, Trapeze.class);}catch (Exception e){
+                    System.out.println("Deserialization error in line #"+line);}
+                } else {
+                   try{ q = JSON.parseObject(_tmp, Quadrangle.class);}catch (Exception e){
+                       System.out.println("Deserialization error in line #"+line);
+                   }
+                }
+                result.add(q);
+            }
+            scanner.close();
+            fr.close();
+            return result;
         }
     }
 }
